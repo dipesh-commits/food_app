@@ -1,0 +1,9 @@
+opencv-python-headless
+matplotlib
+glob2
+tqdm
+pycocotools
+scikit-image
+gunicorn
+loguru
+Flask

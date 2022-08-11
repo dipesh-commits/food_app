@@ -1,0 +1,149 @@
+<html>
+    <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <!-- Latest compiled and minified CSS -->
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+            <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='styles/main.css') }}" />
+
+        <!-- jQuery library -->
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+        <!-- Latest compiled JavaScript -->
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+            
+            <script type="text/javascript" src="{{ url_for('static', filename='scripts/js/three.min.js') }}"></script>
+            <script type="text/javascript" src="{{ url_for('static', filename='scripts/js/OBJLoader.js') }}"></script>
+            <script type="text/javascript" src="{{ url_for('static', filename='scripts/js/TrackballControls.js') }}"></script>
+	        <script type="text/javascript" src="{{ url_for('static', filename='scripts/js/render.js') }}"></script>
+            <script>
+                var objPath = "{{ url_for('static', filename='scripts/output.obj') }}"
+            </script>
+        <title></title> 
+    </head>
+    <body>
+        <div class="container">
+            <div style="text-align: center;"><h2><strong> Food segmentation and detection</strong></h2>
+            <br>
+            <h4>Following categories of foods are detected:</h4>
+            <ul><li>Apple, Banana, Tomato, Chicken, Fries, Rice, Bread, Pizza</li></ul>
+            <!-- <h6>Apple</h6>
+            <h6>Banana</h6>
+            <h6>Tomato</h6>
+            <h6>Chicken</h6>
+            <h6>Fries</h6>
+            <h6>Rice</h6>
+            <h6>Bread</h6>
+            <h6>Pizza</h6> -->
+            <br><br>
+            <h4>Steps:</h4>
+            <h6>1. Choose one image containing food from your local device.</h6>
+            <h6>2. Click upload button</h6>
+            <h6>3. Result will be segmented and detected object</h6>
+            <!-- <h7> Example.</h7>
+            <img src="static/images/index.png" width="1000px" height="300px"/>&nbsp; -->
+            <br>
+            <br>
+            <!-- <h6>2. Convert 2D segmentation into 3D segmentation. Here you will need to provide .obj file and camera parameters with image frames.</h2>
+            <h7> Example.</h7>
+            <img src="static/images/3d_segment.png" width="400px" height="300px">
+            <br><br>
+            <h6>3. The final volume estimation is done at last. You can see the actual volume and predicted volume along with the generated .obj file.</h2>
+            <h7>Actual volume: 275 cm(^3)</h7><br>
+            <h7>Predicted volume:345 cm(^3)</h7><br>
+            <h7>Accuracy: 79.71%</h7>
+                
+                <br><br> -->
+                </div>
+            <h3>Please choose the image frame and upload it </h3>
+        <form method="POST" action="" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="exampleFormControlInput1">Upload an image</label>
+                <input type="file" name="file" class="form-control-file" id="exampleFormControlInput1" placeholder="Upload an image">
+                <br>
+                <input type="submit" value="Upload" class="form-control-file" style="color: black; text-align: center;">
+              </div>
+            
+        </form>
+        
+    </div>
+
+        
+        <section class="part2">
+            <div class="container">
+                {% if img_data %}
+                <h2>2D Segmentation and Detection Results</h2>
+                <div class="row">
+                    
+                    <div class="col-md-4">
+                    <img alt="" class="resize-image center-block" id="image1" src="data:image/jpeg;base64,{{ img_data }}" width="300px" height="300px"/>&nbsp;
+                    <h4 class="text-center">Original Image</h4></div>
+                    {% endif %}
+                    {% if segmented %}
+                    <div class="col-md-4">
+                    <img alt="" class="resize-image center-block" id="image3" src="static/{{ detected }}" width="300px" height="300px"/>&nbsp;
+                    {% if results %}
+                    <h4 class="text-center">Output detected</h4>
+                    <p class="text-center"><strong>Predicted Class:</strong> {{results.get("output").get("class")}}</p>
+                    <p class="text-center"><strong>Confidence:</strong> {{results.get("output").get("confidence")}}</p>
+                    {% endif %}
+                    </div>
+                    <div class="col-md-4">
+                    {% for segment in segmented %}
+                        <img alt="" class="resize-image center-block" id="image2" src="static/{{ segment }}" width="270px" height="270px" />&nbsp;
+                        <h4 class="text-center">Segmented Mask</h4></div>
+                    {% endfor %}
+                    {% endif %}
+                    </div>
+                    
+                
+                <br>
+                <!-- {% if results %}
+                    <div id="container-2">
+                        <input type="button" name="answer" value="Show 3D segmentation" style="color:black; text-align: center;" onclick="show3D()" />
+                        <br><br>
+                        <div id="show3Dsegment"  style="display:none; text-align: center;" class="answer_list" > <img src="static/images/3d_segment.png" width="500px" height="400px"></div>
+                    </div>
+                {% endif %} -->
+                    <br><br><br>
+                <!-- {%if results %} -->
+                        <!-- <div> -->
+                            <!-- <div> -->
+                            <!-- <input type="file" id="obj-file" accept=".obj"> -->
+                            <!-- <button type="button" id="btn-default" onclick="useDefaultData(objPath)" disabled=True>Show generated obj</button> -->
+
+
+                            <!-- <input type="button" name="answer" value="Show estimated volume" style="color:black" onclick="showDiv()" /> -->
+                            <!-- <button type="button" id="btn-upload" onclick="uploadData()" disabled=True></button> -->
+                            <!-- <span id="stats"></span> -->
+                            <!-- </div> -->
+                            <!-- <div> -->
+                               
+                                <!-- <span id="vertex-cnt"></span> &nbsp;&nbsp; <span id="face-cnt"></span> &nbsp;&nbsp; <span><div id="welcomeDiv"  style="display:none;" class="answer_list" > Predicted Volume: 350 cm(^3)</span> <span><div id="welcomeDiv2"  style="display:none;" class="answer_list" > Actual Volume: 270 cm(^3)</span> <span><div id="welcomeDiv3"  style="display:none;" class="answer_list" > Accuracy: 77.14%</span> -->
+                            <!-- </div> -->
+                                <br><br>
+                            
+                        <!-- </div> -->
+                <!-- {% endif %} -->
+            <!-- </div> -->
+            <!-- </div> -->
+    </section>
+    
+    <!-- <div id="container-second"></div> -->
+    
+    </body>
+
+    <!-- <script>
+        function showDiv() {
+                document.getElementById('welcomeDiv').style.display = "block";
+                document.getElementById('welcomeDiv2').style.display = "block";
+                document.getElementById('welcomeDiv3').style.display = "block";
+            }
+
+        function show3D(){
+            document.getElementById('show3Dsegment').style.display = "block";
+        }
+    </script> -->
+
+</html>
+
