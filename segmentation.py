@@ -61,7 +61,7 @@ def predict(img: np.array):
     predictions = predictor(img)
     return predictions
 
-def mask(img: np.array, predictions, binary=False, debug=False) -> np.array:
+def mask(img: np.array, predictions, binary=False, debug=True) -> np.array:
     all_masks = []
     mask = predictions.get("instances").get("pred_masks").to("cpu")
     mask = np.asarray(mask)
